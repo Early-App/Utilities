@@ -38,14 +38,28 @@ public class Row {
     type = String.class;
   }
 
+  /**
+   * Gets a Long Value from a Row.
+   *
+   * @return Value as a long.
+   */
   public long getLong() {
     return itemLong;
   }
 
+  /**
+   * Returns a String value from the database.
+   *
+   * @return Value as a String
+   */
   public String getString() {
     return itemString;
   }
 
+  /**
+   * Returns the Key from the Database.
+   * @return Key String.
+   */
   public String getKey() {
     return key;
   }
