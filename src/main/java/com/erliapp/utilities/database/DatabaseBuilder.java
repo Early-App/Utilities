@@ -65,7 +65,7 @@ public class DatabaseBuilder {
       setup.put(table, new LinkedHashMap<>());
     }
 
-    if (!key.equals("") || key == null) {
+    if (key.equals("") || key == null) {
       throw new IllegalArgumentException("Key must have a value!");
     }
 
