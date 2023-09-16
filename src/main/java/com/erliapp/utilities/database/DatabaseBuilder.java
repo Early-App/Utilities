@@ -177,7 +177,7 @@ public class DatabaseBuilder {
    *
    * @param path The path to set.
    */
-  private void setSqlitePath(Path path) {
+  public void setSqlitePath(Path path) {
     this.sqlitePath = path;
   }
   /**
