@@ -2,6 +2,8 @@ package com.erliapp.utilities.database;
 
 import com.erliapp.utilities.PropertiesEx;
 import java.net.UnknownHostException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.LinkedHashMap;
 
 /**
@@ -15,6 +17,7 @@ public class DatabaseBuilder {
 
   private static final String[] dataTypes = {"BIGINT", "TEXT"};
   private static final String[] databaseTypes = {"cassandra", "sqlite"};
+  private Path sqlitePath = Paths.get("./");
   private boolean typeSet = false;
   private boolean keyspaceSet = false;
 
@@ -170,6 +173,14 @@ public class DatabaseBuilder {
   }
 
   /**
+   * Sets the path for SQLite to use, instead of the default directory.
+   *
+   * @param path The path to set.
+   */
+  private void setSqlitePath(Path path) {
+    this.sqlitePath = path;
+  }
+  /**
    * Takes a Database Configuration, and builds a new Database.
    *
    *  @return A new Database
@@ -216,8 +227,9 @@ public class DatabaseBuilder {
         );
       }
     } else if (type.equals("sqlite")) {
-      out = new SqliteDatabase(setup, properties);
-      ((SqliteDatabase) out).create();
+      SqliteDatabase temp = new SqliteDatabase(setup, properties, sqlitePath);
+      temp.create();
+      out = temp;
     } else {
       throw new IllegalStateException("Database Type not allowed!");
     }

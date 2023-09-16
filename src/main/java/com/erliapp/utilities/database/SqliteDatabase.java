@@ -29,8 +29,7 @@ public class SqliteDatabase implements Database {
    * @param prop Main Properties.
    */
   public SqliteDatabase(
-      LinkedHashMap<String, LinkedHashMap<String, String>> databases, PropertiesEx prop) {
-    Path path = Paths.get("./");
+      LinkedHashMap<String, LinkedHashMap<String, String>> databases, PropertiesEx prop, Path path) {
     url = "jdbc:sqlite:" + path.toAbsolutePath() + "/" + prop.getProperty("cqlkeyspace") + ".db";
     this.databases = databases;
   }
