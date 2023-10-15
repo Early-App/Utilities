@@ -30,14 +30,15 @@ public class SqliteDatabase implements Database {
    */
   public SqliteDatabase(
       LinkedHashMap<String, LinkedHashMap<String, String>> databases, PropertiesEx prop, Path path) {
-    this(databases, prop, path, "sqlite");
+    url = "jdbc:sqlite:" + path.toAbsolutePath() + "/" + prop.getProperty("cqlkeyspace") + ".db";
+    this.databases = databases;
   }
 
   protected SqliteDatabase(
       LinkedHashMap<String, LinkedHashMap<String, String>> databases,
-      PropertiesEx prop, Path path, String jdbc
+      String url
   ) {
-      url = "jdbc:" + jdbc + ":" + path.toAbsolutePath() + "/" + prop.getProperty("cqlkeyspace") + ".db";
+      this.url = url;
       this.databases = databases;
   }
 

@@ -16,7 +16,7 @@ public class DatabaseBuilder {
   private PropertiesEx properties;
 
   private static final String[] dataTypes = {"BIGINT", "TEXT"};
-  private static final String[] databaseTypes = {"cassandra", "sqlite"};
+  private static final String[] databaseTypes = {"cassandra", "sqlite", "mariadb", "mysql"};
   private Path sqlitePath = Paths.get("./");
   private boolean typeSet = false;
   private boolean keyspaceSet = false;
@@ -228,6 +228,10 @@ public class DatabaseBuilder {
       }
     } else if (type.equals("sqlite")) {
       SqliteDatabase temp = new SqliteDatabase(setup, properties, sqlitePath);
+      temp.create();
+      out = temp;
+    } else if (type.equals("mysql")) {
+      SqlDatabase temp = new SqlDatabase(setup, properties);
       temp.create();
       out = temp;
     } else {

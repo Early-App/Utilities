@@ -1,6 +1,7 @@
 package com.erliapp.utilities.database;
 
 import com.erliapp.utilities.PropertiesEx;
+import java.net.UnknownHostException;
 import java.nio.file.Path;
 import java.util.LinkedHashMap;
 
@@ -14,8 +15,20 @@ public class MariaDBDatabase extends SqliteDatabase {
    * @param prop Main Properties.
    */
   public MariaDBDatabase(
-      LinkedHashMap<String, LinkedHashMap<String, String>> databases, PropertiesEx prop, Path path) {
-    super(databases, prop, path, "mariadb");
-
+      LinkedHashMap<String, LinkedHashMap<String, String>> databases, PropertiesEx prop) {
+    super(
+        databases,
+        "jdbc://mariadb://"
+            + prop.getProperty("cqlcontact")
+            + ":"
+            + prop.getProperty("cqlport")
+            + "/"
+            + prop.getProperty("cqlkeyspace")
+            + (prop.getProperty("cqlauth").equals("true")
+            ? "?user=" + prop.getProperty("cqluser")
+            + "&password="
+            + prop.getProperty("cqlpassword")
+            : "")
+    );
   }
 }
