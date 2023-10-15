@@ -234,6 +234,10 @@ public class DatabaseBuilder {
       SqlDatabase temp = new SqlDatabase(setup, properties);
       temp.create();
       out = temp;
+    } else if (type.equals("mariadb")) {
+      MariaDBDatabase temp = new MariaDBDatabase(setup, properties);
+      temp.create();
+      out = temp;
     } else {
       throw new IllegalStateException("Database Type not allowed!");
     }
