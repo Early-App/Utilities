@@ -164,6 +164,15 @@ public class DatabaseBuilder {
   }
 
   /**
+   * Sets whether SSL is enabled.
+   *
+   * @param ssl Whether ssl is enabled.
+   */
+  public void setUseSSL(boolean ssl) {
+    properties.setProperty("useSSL", "" + ssl);
+  }
+
+  /**
    * Sets whether Authentication is necessary for a database.
    *
    *  @param useAuth {@code true} if auth is used. {@code false} if it isn't.
@@ -231,11 +240,22 @@ public class DatabaseBuilder {
       temp.create();
       out = temp;
     } else if (type.equals("mysql")) {
-      SqlDatabase temp = new SqlDatabase(setup, properties);
+      SqlDatabase temp;
+      if (properties.containsKey("useSSL")) {
+        temp = new SqlDatabase(setup, properties, properties.get("useSSL").equals("true") ? true : false);
+      } else {
+        temp = new SqlDatabase(setup, properties);
+      }
       temp.create();
       out = temp;
     } else if (type.equals("mariadb")) {
-      MariaDBDatabase temp = new MariaDBDatabase(setup, properties);
+
+      MariaDBDatabase temp;
+      if (properties.containsKey("useSSL")) {
+        temp = new MariaDBDatabase(setup, properties, properties.get("useSSL").equals("true") ? true : false);
+      } else {
+        temp = new MariaDBDatabase(setup, properties);
+      }
       temp.create();
       out = temp;
     } else {
