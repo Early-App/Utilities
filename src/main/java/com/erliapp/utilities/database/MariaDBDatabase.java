@@ -18,7 +18,7 @@ public class MariaDBDatabase extends SqliteDatabase {
       LinkedHashMap<String, LinkedHashMap<String, String>> databases, PropertiesEx prop) {
     super(
         databases,
-        "jdbc://mariadb://"
+        "jdbc:mariadb://"
             + prop.getProperty("cqlcontact")
             + ":"
             + prop.getProperty("cqlport")

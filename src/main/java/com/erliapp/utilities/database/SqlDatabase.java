@@ -21,7 +21,7 @@ public class SqlDatabase extends SqliteDatabase {
       throws UnknownHostException {
     super(
         databases,
-        "jdbc://mysql://"
+        "jdbc:mysql://"
             + prop.getProperty("cqlcontact")
             + ":"
             + prop.getProperty("cqlport")
