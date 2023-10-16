@@ -31,4 +31,23 @@ public class MariaDBDatabase extends SqliteDatabase {
             : "")
     );
   }
+
+  public MariaDBDatabase(
+      LinkedHashMap<String, LinkedHashMap<String, String>> databases, PropertiesEx prop, boolean ssl) {
+    super(
+        databases,
+        "jdbc:mariadb://"
+            + prop.getProperty("cqlcontact")
+            + ":"
+            + prop.getProperty("cqlport")
+            + "/"
+            + prop.getProperty("cqlkeyspace")
+            + "?ssl=" + ssl
+            + (prop.getProperty("cqlauth").equals("true")
+            ? "&user=" + prop.getProperty("cqluser")
+            + "&password="
+            + prop.getProperty("cqlpassword")
+            : "")
+    );
+  }
 }
