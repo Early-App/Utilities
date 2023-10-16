@@ -116,9 +116,9 @@ public class SqliteDatabase implements Database {
       while (rs.next()) {
         Map<String, Row> obj = new LinkedHashMap<>();
         for (String i : selecting) {
-          if (table.get(i).equals("bigint")) {
+          if (table.get(i).equalsIgnoreCase("bigint")) {
             obj.put(i, new Row(i, rs.getLong(i)));
-          } else if (table.get(i).equals("text")) {
+          } else if (table.get(i).equalsIgnoreCase("text")) {
             obj.put(i, new Row(i, rs.getString(i)));
           }
         }
@@ -166,9 +166,9 @@ public class SqliteDatabase implements Database {
       LinkedHashMap<String, String> table = databases.get(database);
       Object[] valuesArr = Arrays.stream(values).toArray();
       for (int i = 0; i < inserting.length; i++) {
-        if (table.get(inserting[i]).equals("bigint")) {
+        if (table.get(inserting[i]).equalsIgnoreCase("bigint")) {
           pstmt.setLong(i + 1, (Long) valuesArr[i]);
-        } else if (table.get(inserting[i]).equals("text")) {
+        } else if (table.get(inserting[i]).equalsIgnoreCase("text")) {
           pstmt.setString(i + 1, (String) valuesArr[i]);
         }
       }

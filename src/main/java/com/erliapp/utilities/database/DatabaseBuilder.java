@@ -72,13 +72,13 @@ public class DatabaseBuilder {
     boolean foundDataType = false;
 
     for (String type : dataTypes) {
-      if (type.equals(dataType)) {
+      if (type.equalsIgnoreCase(dataType)) {
         foundDataType = true;
       }
     }
 
     if (foundDataType) {
-      setup.get(table).put(key, dataType);
+      setup.get(table).put(key, dataType.toUpperCase());
       return;
     }
 
