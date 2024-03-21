@@ -15,7 +15,7 @@ public class DatabaseBuilder {
   private LinkedHashMap<String, LinkedHashMap<String, String>> setup;
   private PropertiesEx properties;
 
-  private static final String[] dataTypes = {"BIGINT", "TEXT"};
+  private static final String[] dataTypes = {"BIGINT", "TEXT", "DOUBLE", "UUID"};
   private static final String[] databaseTypes = {"cassandra", "sqlite", "mariadb", "mysql"};
   private Path sqlitePath = Paths.get("./");
   private boolean typeSet = false;

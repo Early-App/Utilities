@@ -1,41 +1,45 @@
 package com.erliapp.utilities.database;
 
-/** Handles a Row of data within a Database. */
-public class Row {
+import java.util.UUID;
 
-  private final String itemString;
+/** Handles a Row of data within a Database. */
+public class Row<T extends Object> {
+
+  private final Class<?>[] allowedTypes = new Class[]{
+          String.class,
+          Double.class,
+          Long.class,
+          UUID.class
+  };
+
   private final Class<?> type;
-  private final String key;
-  private long itemLong;
+
+  private T item;
 
   /**
    * Row Constructor.
    *
-   * @param key Row Key
-   * @param item Row data as Long.
+   * @param iClass Class Type.
+   * @param item Row data.
    */
-  public Row(String key, long item) {
-    this.key = key;
-    this.itemLong = item;
-    this.itemString = String.valueOf(item);
-    type = Long.class;
+  public Row(Class<T> iClass, T item) {
+    boolean found = false;
+    for (Class<?> c : allowedTypes) {
+      if (c.getName().equals(iClass.getName()) && c.getPackageName().equals(iClass.getPackageName())) {
+        found = true;
+      }
+    }
+    if (found) {
+      this.type = iClass;
+      this.item = item;
+    } else {
+      throw new RuntimeException("Class " + iClass.getName() + " is not a valid type.");
+    }
   }
 
-  /**
-   * Row Constructor.
-   *
-   * @param key Row Key.
-   * @param item Row Data as String.
-   */
-  public Row(String key, String item) {
-    this.key = key;
-    this.itemString = item;
-    try {
-      this.itemLong = Long.parseLong(item);
-    } catch (Exception e) {
-      this.itemLong = -1L;
-    }
-    type = String.class;
+
+  public T getItem() {
+    return this.item;
   }
 
   /**
@@ -44,7 +48,46 @@ public class Row {
    * @return Value as a long.
    */
   public long getLong() {
-    return itemLong;
+
+    if (item instanceof Long) {
+      return (long) item;
+    } else {
+      String s = getString();
+
+      try {
+        return Long.parseLong(s);
+      } catch (Exception e) {
+        return -1L;
+      }
+    }
+  }
+
+  public Double getDouble() {
+    if (item instanceof Double) {
+      return (double) item;
+    } else {
+      String s = getString();
+
+      try {
+        return Double.parseDouble(s);
+      } catch (Exception e) {
+        return -1.0;
+      }
+    }
+  }
+
+  public UUID getUUID() {
+    if (item instanceof UUID) {
+      return (UUID) item;
+    } else {
+      String s = getString();
+
+      try {
+        return UUID.fromString(s);
+      } catch (IllegalArgumentException e) {
+        return null;
+      }
+    }
   }
 
   /**
@@ -53,15 +96,7 @@ public class Row {
    * @return Value as a String
    */
   public String getString() {
-    return itemString;
-  }
-
-  /**
-   * Returns the Key from the Database.
-   * @return Key String.
-   */
-  public String getKey() {
-    return key;
+    return item.toString();
   }
 
   public Class<?> getType() {

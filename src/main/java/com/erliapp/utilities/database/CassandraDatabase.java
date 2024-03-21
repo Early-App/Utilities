@@ -10,10 +10,7 @@ import com.erliapp.utilities.Util;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /** Cassandra Database instance. Connects to a Cassandra Database to get information. */
 public class CassandraDatabase implements Database {
@@ -67,7 +64,7 @@ public class CassandraDatabase implements Database {
    * @return A List of rows, with each column within.
    */
   @Override
-  public List<Map<String, com.erliapp.utilities.database.Row>> select(
+  public DatabaseSelection select(
       String[] selecting, String database, String where) {
 
     // Gather items that are selected, and output as a String with commas
@@ -98,17 +95,20 @@ public class CassandraDatabase implements Database {
 
     // Gets table information, and starts to parse and output data in their correct datatypes.
     LinkedHashMap<String, String> table = databases.get(database);
-    List<Map<String, com.erliapp.utilities.database.Row>> out = new ArrayList<>();
+    DatabaseSelection out = new DatabaseSelection();
     for (Row row : rs.all()) {
-      Map<String, com.erliapp.utilities.database.Row> obj = new LinkedHashMap<>();
+      out.addRow();
       for (String i : selecting) {
-        if (table.get(i).equals("bigint")) {
-          obj.put(i, new com.erliapp.utilities.database.Row(i, row.getLong(i)));
-        } else if (table.get(i).equals("text")) {
-          obj.put(i, new com.erliapp.utilities.database.Row(i, row.getString(i)));
+        if (table.get(i).equalsIgnoreCase("bigint")) {
+          out.addItem(i, new com.erliapp.utilities.database.Row<>(Long.class, row.getLong(i)));
+        } else if (table.get(i).equalsIgnoreCase("text")) {
+          out.addItem(i, new com.erliapp.utilities.database.Row<>(String.class, row.getString(i)));
+        } else if (table.get(i).equalsIgnoreCase("double")) {
+          out.addItem(i, new com.erliapp.utilities.database.Row<>(Double.class, row.getDouble(i)));
+        } else if (table.get(i).equalsIgnoreCase("uuid")) {
+          out.addItem(i, new com.erliapp.utilities.database.Row<>(UUID.class, row.getUuid(i)));
         }
       }
-      out.add(obj);
     }
 
     return out;

@@ -9,11 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /** Sqlite Database System. */
 public class SqliteDatabase implements Database {
@@ -95,7 +91,7 @@ public class SqliteDatabase implements Database {
    * @return List of Rows and Columns
    */
   @Override
-  public List<Map<String, Row>> select(String[] selecting, String database, String where) {
+  public DatabaseSelection select(String[] selecting, String database, String where) {
 
     try (Connection conn = DriverManager.getConnection(url)) {
 
@@ -117,17 +113,21 @@ public class SqliteDatabase implements Database {
       ResultSet rs = stmt.executeQuery(query);
 
       LinkedHashMap<String, String> table = databases.get(database);
-      List<Map<String, Row>> out = new ArrayList<>();
+
+      DatabaseSelection out = new DatabaseSelection();
       while (rs.next()) {
-        Map<String, Row> obj = new LinkedHashMap<>();
+        out.addRow();
         for (String i : selecting) {
           if (table.get(i).equalsIgnoreCase("bigint")) {
-            obj.put(i, new Row(i, rs.getLong(i)));
+            out.addItem(i, new Row<>(Long.class, rs.getLong(i)));
           } else if (table.get(i).equalsIgnoreCase("text")) {
-            obj.put(i, new Row(i, rs.getString(i)));
+            out.addItem(i, new Row<>(String.class, rs.getString(i)));
+          } else if (table.get(i).equalsIgnoreCase("double")) {
+            out.addItem(i, new Row<>(Double.class, rs.getDouble(i)));
+          } else if (table.get(i).equalsIgnoreCase("uuid")) {
+            out.addItem(i, new Row<>(UUID.class, UUID.fromString(rs.getString(i))));
           }
         }
-        out.add(obj);
       }
 
       stmt.close();
@@ -167,18 +167,22 @@ public class SqliteDatabase implements Database {
     try (Connection conn = DriverManager.getConnection(url)) {
 
       String query = DatabaseUtil.setupInsertingData(database, inserting);
-      PreparedStatement pstmt = conn.prepareStatement(query);
+      PreparedStatement stmt = conn.prepareStatement(query);
       LinkedHashMap<String, String> table = databases.get(database);
       Object[] valuesArr = Arrays.stream(values).toArray();
       for (int i = 0; i < inserting.length; i++) {
         if (table.get(inserting[i]).equalsIgnoreCase("bigint")) {
-          pstmt.setLong(i + 1, (Long) valuesArr[i]);
+          stmt.setLong(i + 1, (Long) valuesArr[i]);
         } else if (table.get(inserting[i]).equalsIgnoreCase("text")) {
-          pstmt.setString(i + 1, (String) valuesArr[i]);
+          stmt.setString(i + 1, (String) valuesArr[i]);
+        } else if (table.get(inserting[i]).equalsIgnoreCase("double")) {
+          stmt.setDouble(i + 1, (Double) valuesArr[i]);
+        } else if (table.get(inserting[i]).equalsIgnoreCase("uuid")) {
+          stmt.setString(i + 1, valuesArr[i].toString());
         }
       }
-      pstmt.executeUpdate();
-      pstmt.close();
+      stmt.executeUpdate();
+      stmt.close();
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }

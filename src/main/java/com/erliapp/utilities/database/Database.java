@@ -12,10 +12,9 @@ public interface Database {
    * @param selecting String array of items to select
    * @param database Database to select from.
    * @param where General WHERE statement.
-   * @return Database Data.
+   * @return DatabaseSelection Data.
    */
-  List<Map<String, Row>> select(String[] selecting, String database, String where);
-
+  DatabaseSelection select(String[] selecting, String database, String where);
 
   /**
    * Runs a blank query.
