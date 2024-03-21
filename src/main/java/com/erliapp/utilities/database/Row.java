@@ -4,7 +4,7 @@ package com.erliapp.utilities.database;
 public class Row {
 
   private final String itemString;
-  private final Class type;
+  private final Class<?> type;
   private final String key;
   private long itemLong;
 
@@ -62,5 +62,9 @@ public class Row {
    */
   public String getKey() {
     return key;
+  }
+
+  public Class<?> getType() {
+    return type;
   }
 }

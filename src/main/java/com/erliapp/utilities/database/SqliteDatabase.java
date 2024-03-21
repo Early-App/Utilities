@@ -2,7 +2,6 @@ package com.erliapp.utilities.database;
 
 import com.erliapp.utilities.PropertiesEx;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -34,6 +33,11 @@ public class SqliteDatabase implements Database {
     this.databases = databases;
   }
 
+  /**
+   * Creates a Database with a provided URL.
+   * @param databases Database Setup information
+   * @param url URL to database.
+   */
   protected SqliteDatabase(
       LinkedHashMap<String, LinkedHashMap<String, String>> databases,
       String url
@@ -42,7 +46,9 @@ public class SqliteDatabase implements Database {
       this.databases = databases;
   }
 
-  /** Creates a and initializes the Database with valid tables. */
+  /**
+   * Creates a and initializes the Database with valid tables.
+   */
   public void create() {
     ArrayList<String> statements = new ArrayList<>();
 
@@ -74,7 +80,6 @@ public class SqliteDatabase implements Database {
           stmt.execute(i);
           stmt.close();
         }
-        conn.close();
       }
     } catch (SQLException e) {
       e.printStackTrace();
@@ -179,7 +184,10 @@ public class SqliteDatabase implements Database {
     }
   }
 
-  /** Closes a SQL connection (Not used for this.) */
+  /**
+   * Closes a SQL connection (Not used for this.)
+   */
   @Override
-  public void close() {}
+  public void close() {
+  }
 }

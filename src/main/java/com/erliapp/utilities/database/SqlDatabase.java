@@ -1,10 +1,7 @@
 package com.erliapp.utilities.database;
 
 import com.erliapp.utilities.PropertiesEx;
-import com.erliapp.utilities.Util;
-import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.nio.file.Path;
 import java.util.LinkedHashMap;
 
 /** Sql Database System. */
